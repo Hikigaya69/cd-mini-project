@@ -1,0 +1,54 @@
+Token                Lexeme               Type                
+------------------------------------------------------------
+KEYWORD              int                  Keyword             
+KEYWORD              main                 Keyword             
+PUNCTUATION          (                    Punctuation         
+PUNCTUATION          )                    Punctuation         
+KEYWORD              begin                Keyword             
+KEYWORD              int                  Keyword             
+IDENTIFIER           n1                   Identifier          
+PUNCTUATION          ,                    Punctuation         
+IDENTIFIER           n2                   Identifier          
+PUNCTUATION          ,                    Punctuation         
+IDENTIFIER           n3                   Identifier          
+PUNCTUATION          ;                    Punctuation         
+KEYWORD              if                   Keyword             
+PUNCTUATION          (                    Punctuation         
+EXPR                 expr                 Expression          
+RELOP                relop                Relational Operator 
+EXPR                 expr                 Expression          
+PUNCTUATION          )                    Punctuation         
+KEYWORD              begin                Keyword             
+KEYWORD              printf               Keyword             
+PUNCTUATION          (                    Punctuation         
+IDENTIFIER           n1                   Identifier          
+PUNCTUATION          )                    Punctuation         
+PUNCTUATION          ;                    Punctuation         
+KEYWORD              end                  Keyword             
+KEYWORD              if                   Keyword             
+PUNCTUATION          (                    Punctuation         
+EXPR                 expr                 Expression          
+RELOP                relop                Relational Operator 
+EXPR                 expr                 Expression          
+PUNCTUATION          )                    Punctuation         
+KEYWORD              begin                Keyword             
+KEYWORD              printf               Keyword             
+PUNCTUATION          (                    Punctuation         
+IDENTIFIER           n2                   Identifier          
+PUNCTUATION          )                    Punctuation         
+PUNCTUATION          ;                    Punctuation         
+KEYWORD              end                  Keyword             
+KEYWORD              if                   Keyword             
+PUNCTUATION          (                    Punctuation         
+EXPR                 expr                 Expression          
+RELOP                relop                Relational Operator 
+EXPR                 expr                 Expression          
+PUNCTUATION          )                    Punctuation         
+KEYWORD              begin                Keyword             
+KEYWORD              printf               Keyword             
+PUNCTUATION          (                    Punctuation         
+IDENTIFIER           n3                   Identifier          
+PUNCTUATION          )                    Punctuation         
+PUNCTUATION          ;                    Punctuation         
+KEYWORD              end                  Keyword             
+KEYWORD              end                  Keyword             

@@ -1,0 +1,10 @@
+FOLLOW Sets:
+----------------------------------------
+PROGRAM: $
+main_block: $
+DECLS: KEYWORD
+ID_LIST: PUNCTUATION
+ID_TAIL: PUNCTUATION
+STMTS: KEYWORD
+STMT: KEYWORD
+ACTION: KEYWORD

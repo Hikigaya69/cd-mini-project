@@ -1,0 +1,21 @@
+└── S
+    ├── TYPE (Terminal)
+    ├── MAIN (Terminal)
+    ├── CODE
+    │   ├── DECLARE
+    │   │   ├── TYPE (Terminal)
+    │   │   ├── ID_LIST
+    │   │   │   ├── ID (Terminal)
+    │   │   │   ├── CM (Terminal)
+    │   │   │   ├── ID (Terminal)
+    │   │   │   ├── CM (Terminal)
+    │   │   │   └── ID (Terminal)
+    │   │   └── SC (Terminal)
+    │   └── STATEMENTS
+    │       ├── IF_STMT
+    │       │   └── PRINTF
+    │       ├── IF_STMT
+    │       │   └── PRINTF
+    │       └── IF_STMT
+    │           └── PRINTF
+    └── END (Terminal)
