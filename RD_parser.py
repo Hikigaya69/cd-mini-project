@@ -1,3 +1,7 @@
+import re
+from collections import defaultdict
+
+# === PARSE TREE PART === #
 class Node:
     def __init__(self, label, terminal=False):
         self.label = label
@@ -16,6 +20,71 @@ def print_tree(node, prefix="", is_last=True, output=[]):
         print_tree(child, new_prefix, is_last_child, output)
     return output
 
+# === FIRST/FOLLOW PART === #
+grammar = {
+    "PROGRAM":      [["main_block"]],
+    "main_block":   [["KEYWORD", "KEYWORD", "DECLS", "STMTS", "KEYWORD"]],
+    "DECLS":        [["KEYWORD", "ID_LIST", "PUNCTUATION"]],
+    "ID_LIST":      [["IDENTIFIER", "ID_TAIL"]],
+    "ID_TAIL":      [["PUNCTUATION", "ID_LIST"], []],
+    "STMTS":        [["STMT", "STMTS"], []],
+    "STMT":         [["KEYWORD", "PUNCTUATION", "EXPR", "RELOP", "EXPR", "PUNCTUATION", "KEYWORD", "ACTION", "KEYWORD"]],
+    "ACTION":       [["KEYWORD", "PUNCTUATION", "IDENTIFIER", "PUNCTUATION"]],
+}
+
+non_terminals = set(grammar.keys())
+first = defaultdict(set)
+follow = defaultdict(set)
+
+def compute_first(symbol):
+    if symbol not in non_terminals:
+        return {symbol}
+    if first[symbol]:
+        return first[symbol]
+    for prod in grammar[symbol]:
+        if not prod:
+            first[symbol].add("ε")
+        else:
+            for sym in prod:
+                sym_first = compute_first(sym)
+                first[symbol] |= (sym_first - {"ε"})
+                if "ε" not in sym_first:
+                    break
+            else:
+                first[symbol].add("ε")
+    return first[symbol]
+
+def compute_follow():
+    follow["PROGRAM"].add("$")
+    changed = True
+    while changed:
+        changed = False
+        for head in grammar:
+            for production in grammar[head]:
+                for i, symbol in enumerate(production):
+                    if symbol in non_terminals:
+                        rest = production[i + 1:]
+                        follow_before = follow[symbol].copy()
+                        if rest:
+                            rest_first = set()
+                            for sym in rest:
+                                sym_first = compute_first(sym)
+                                rest_first |= (sym_first - {"ε"})
+                                if "ε" in sym_first:
+                                    continue
+                                else:
+                                    break
+                            else:
+                                rest_first.add("ε")
+                            follow[symbol] |= (rest_first - {"ε"})
+                            if "ε" in rest_first:
+                                follow[symbol] |= follow[head]
+                        else:
+                            follow[symbol] |= follow[head]
+                        if follow_before != follow[symbol]:
+                            changed = True
+
+# === PARSER LOGIC === #
 def parser():
     try:
         with open("token_stream.txt") as f:
@@ -105,13 +174,13 @@ def parser():
         root.add(code)
         root.add(Node("END", True))
 
-        # Write parse tree
+        # === OUTPUT === #
+        # 1. Parse Tree
         tree_lines = print_tree(root)
         with open("parse_tree.txt", "w", encoding="utf-8") as tf:
-            for line in tree_lines:
-                tf.write(line + "\n")
+            tf.writelines(line + "\n" for line in tree_lines)
 
-        # Write parser table
+        # 2. Grammar Rules Used
         with open("parser_table.txt", "w", encoding="utf-8") as pt:
             pt.write("Grammar Rules Used:\n")
             pt.write("1. S → TYPE MAIN CODE END\n")
@@ -122,12 +191,27 @@ def parser():
             pt.write("6. IF_STMT → IF ( EXPR RELOP EXPR ) BEGIN PRINTF END\n")
             pt.write("7. PRINTF → printf ( ID ) ;\n")
 
-        print(" Parse tree and table generated successfully.")
+        # 3. FIRST/FOLLOW
+        for non_term in grammar:
+            compute_first(non_term)
+        compute_follow()
+
+        with open("first.txt", "w", encoding="utf-8") as ff:
+            ff.write("FIRST Sets:\n" + "-" * 40 + "\n")
+            for nt in grammar:
+                ff.write(f"{nt}: {', '.join(first[nt])}\n")
+
+        with open("follow.txt", "w", encoding="utf-8") as ffw:
+            ffw.write("FOLLOW Sets:\n" + "-" * 40 + "\n")
+            for nt in grammar:
+                ffw.write(f"{nt}: {', '.join(follow[nt])}\n")
+
+        print("Parse tree, parser table, FIRST and FOLLOW sets generated successfully.")
 
     except Exception as e:
         with open("error.txt", "w", encoding="utf-8") as ef:
             ef.write(f"Syntax Error:\n{str(e)}\n")
-        print(f"Error written to error.txt")
+        print("Error written to error.txt")
 
 if __name__ == "__main__":
     parser()
